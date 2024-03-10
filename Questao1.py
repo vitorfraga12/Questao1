@@ -58,31 +58,56 @@ def simular_experimento(B_t, p_t, d_0, K_0, M, N):
     return Capacidade
 
 B_t, p_t, d_0, K_0 = 100e6, 1e3, 1, 1e-17 # Em MHz, mW, metros, mW/Hz respectivamente
-M, K, N = 25, 1, 1 #Número de APs, UEs e Canais respectivamente
+M_1, K, N = 1, 1, 1 #Número de APs, UEs e Canais respectivamente
+M_9, M_25, M_64 = 9, 25, 64
 
 # Número de iterações
 num_iteracoes = 50000
 
 # Armazenar todas as capacidades
-Capacidade_total = []
+Capacidade_total_1 = []
+Capacidade_total_9 = []
+Capacidade_total_25 = []
+Capacidade_total_64 = []
 
 # Iteração
 for _ in range(num_iteracoes):
-    Capacidade_iteracao = simular_experimento(B_t, p_t, d_0, K_0, M, N)
-    Capacidade_total = np.concatenate((Capacidade_total, Capacidade_iteracao))
+    Capacidade_iteracao_1 = simular_experimento(B_t, p_t, d_0, K_0, M_1, N)
+    Capacidade_total_1 = np.concatenate((Capacidade_total_1, Capacidade_iteracao_1))
+
+for _ in range(num_iteracoes):
+    Capacidade_iteracao_9 = simular_experimento(B_t, p_t, d_0, K_0, M_9, N)
+    Capacidade_total_9 = np.concatenate((Capacidade_total_9, Capacidade_iteracao_9))
+
+for _ in range(num_iteracoes):
+    Capacidade_iteracao_25 = simular_experimento(B_t, p_t, d_0, K_0, M_25, N)
+    Capacidade_total_25 = np.concatenate((Capacidade_total_25, Capacidade_iteracao_25))
+
+for _ in range(num_iteracoes):
+    Capacidade_iteracao_64 = simular_experimento(B_t, p_t, d_0, K_0, M_64, N)
+    Capacidade_total_64 = np.concatenate((Capacidade_total_64, Capacidade_iteracao_64))
 
 #Deixando em ordem crescente
-x = np.sort(Capacidade_total)
+x1 = np.sort(Capacidade_total_1)
+x2 = np.sort(Capacidade_total_9)
+x3 = np.sort(Capacidade_total_25)
+x4 = np.sort(Capacidade_total_64)
 
 # Plotar apenas o eixo x em decibéis
-plt.xlabel('Capacidade')
+
+plt.plot(x1, np.arange(0, len(Capacidade_total_1)) / len(Capacidade_total_1), label = '1 AP')
+plt.plot(x2, np.arange(0, len(Capacidade_total_1)) / len(Capacidade_total_1), label = '9 APs')
+plt.plot(x3, np.arange(0, len(Capacidade_total_1)) / len(Capacidade_total_1), label = '25 APs')
+plt.plot(x4, np.arange(0, len(Capacidade_total_1)) / len(Capacidade_total_1), label = '64 APs')
+plt.legend()
+
+# Adicionando linha tracejada em x=100e6
+plt.axvline(x=100e6, color='grey', linestyle='--', label='x=100e6')
+
+# Adicionando linha tracejada em y=0.1
+plt.axhline(y=0.1, color='grey', linestyle='--', label='y=0.1')
+
+plt.xlabel('Capacidade (bps)')
 plt.ylabel('Porcentagem')
 plt.title('CDF da Capacidade')
-
-plt.plot(x, np.arange(0, len(Capacidade_total)) / len(Capacidade_total))
 plt.show()
-
-percent = np.percentile(x, 10)
-print(percent)
-
-
