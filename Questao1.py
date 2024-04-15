@@ -55,7 +55,7 @@ def simular_experimento(B_t, p_t, d_0, K_0, M, N):
     for i in range(K):
       Capacidade[i] = B_c * np.log2(1+snr_2)
 
-    return Capacidade
+    return SNR
 
 B_t, p_t, d_0, K_0 = 100e6, 1e3, 1, 1e-17 # Em MHz, mW, metros, mW/Hz respectivamente
 M_1, K, N = 1, 1, 1 #Número de APs, UEs e Canais respectivamente
@@ -106,6 +106,7 @@ plt.axvline(x=100e6, color='grey', linestyle='--', label='x=100e6')
 
 # Adicionando linha tracejada em y=0.1
 plt.axhline(y=0.1, color='grey', linestyle='--', label='y=0.1')
+
 
 plt.xlabel('Capacidade (bps)')
 plt.ylabel('Porcentagem')
